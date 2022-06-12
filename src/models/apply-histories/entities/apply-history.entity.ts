@@ -1,27 +1,17 @@
 import { Job } from 'src/models/jobs/entities/job.entity';
+import { User } from 'src/models/users/entities/user.entity';
 import {
   Entity,
-  Column,
   CreateDateColumn,
   UpdateDateColumn,
   PrimaryGeneratedColumn,
-  OneToMany,
+  ManyToOne,
 } from 'typeorm';
-import { ICompany } from '../interfaces/company.interface';
 
-@Entity({ name: 'companies' })
-export class Company implements ICompany {
+@Entity({ name: 'apply_histories' })
+export class ApplyHistory {
   @PrimaryGeneratedColumn('uuid')
   id: string;
-
-  @Column()
-  name: string;
-
-  @Column()
-  country: string;
-
-  @Column()
-  region: string;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
@@ -29,6 +19,9 @@ export class Company implements ICompany {
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
   updatedAt: Date;
 
-  @OneToMany(() => Job, (job) => job.company)
-  jobs: Job[];
+  @ManyToOne(() => Job, (job) => job.applyHistories)
+  job: Job;
+
+  @ManyToOne(() => User, (user) => user.applyHistories)
+  user: User;
 }
