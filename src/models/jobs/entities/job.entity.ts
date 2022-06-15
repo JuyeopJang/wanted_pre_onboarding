@@ -11,8 +11,20 @@ import {
 } from 'typeorm';
 import { IJob } from '../interfaces/job.interface';
 
-@Entity({ name: 'jobs' })
+@Entity({ name: 'job' })
 export class Job implements IJob {
+  constructor(
+    position: string,
+    reward: number,
+    tech: string,
+    description: string,
+  ) {
+    this.position = position;
+    this.reward = reward;
+    this.tech = tech;
+    this.description = description;
+  }
+
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -34,9 +46,15 @@ export class Job implements IJob {
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
   updatedAt: Date;
 
-  @ManyToOne(() => Company, (company) => company.jobs)
+  @ManyToOne(() => Company, (company) => company.jobs, {
+    nullable: false,
+  })
   company: Company;
 
   @OneToMany(() => ApplyHistory, (applyHistory) => applyHistory.job)
   applyHistories: ApplyHistory[];
+
+  setCompany(company: Company) {
+    this.company = company;
+  }
 }

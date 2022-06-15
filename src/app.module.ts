@@ -5,12 +5,14 @@ import { AppService } from './app.service';
 import { MysqlDatabaseProviderModule } from './providers/database/mysql/provider.mysql';
 import { APP_PIPE } from '@nestjs/core';
 import { JobsModule } from './models/jobs/jobs.module';
+import { SeederModule } from './database/seeders/seeder.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     MysqlDatabaseProviderModule,
     JobsModule,
+    SeederModule,
   ],
   controllers: [AppController],
   providers: [

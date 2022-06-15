@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { ICompany } from '../interfaces/company.interface';
 
-@Entity({ name: 'companies' })
+@Entity({ name: 'company' })
 export class Company implements ICompany {
   @PrimaryGeneratedColumn('uuid')
   id: string;

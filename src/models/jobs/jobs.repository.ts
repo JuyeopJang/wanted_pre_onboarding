@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PostJobDto } from './dtos/post-job.dto';
+// import { PostJobDto } from './dtos/post-job.dto';
 import { Job } from './entities/job.entity';
 import { Repository } from 'typeorm';
 
@@ -11,12 +11,14 @@ export class JobsRepository {
     private readonly jobsRepository: Repository<Job>,
   ) {}
 
-  async createJob(postJobDto: PostJobDto) {
+  async createJob(job: Job) {
     return this.jobsRepository
       .createQueryBuilder()
       .insert()
       .into(Job)
-      .values(postJobDto)
+      .values(job)
       .execute();
   }
+
+  // async findJobById(jobId: string) {}
 }

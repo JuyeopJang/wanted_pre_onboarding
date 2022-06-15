@@ -8,7 +8,7 @@ import {
   ManyToOne,
 } from 'typeorm';
 
-@Entity({ name: 'apply_histories' })
+@Entity({ name: 'apply_history' })
 export class ApplyHistory {
   @PrimaryGeneratedColumn('uuid')
   id: string;

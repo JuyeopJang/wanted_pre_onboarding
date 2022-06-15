@@ -8,8 +8,10 @@ import {
   Post,
   Put,
   Query,
+  Res,
 } from '@nestjs/common';
-import { PostJobDto } from './dtos/post-job.dto';
+import { PostJobDto } from './dtos/request-dto/post-job.dto';
+// import { Job } from './entities/job.entity';
 import { JobsService } from './jobs.service';
 
 @Controller('jobs')
@@ -20,8 +22,8 @@ export class JobsController {
   @HttpCode(201)
   @Post()
   async postJob(@Body() postJobDto: PostJobDto) {
-    await this.jobsService.postJob(postJobDto);
-    return 'successfully post job';
+    const jobId = await this.jobsService.postJob(postJobDto);
+    return jobId;
   }
 
   // 채용공고 수정 API

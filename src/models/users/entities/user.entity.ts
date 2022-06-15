@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { IUser } from '../interfaces/user.interface';
 
-@Entity({ name: 'users' })
+@Entity({ name: 'user' })
 export class User implements IUser {
   @PrimaryGeneratedColumn('uuid')
   id: string;

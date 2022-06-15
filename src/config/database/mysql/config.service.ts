@@ -19,6 +19,8 @@ export class MysqlConfigService implements TypeOrmOptionsFactory {
       database: this.configService.get<string>('MYSQL_DATABASE'),
       entities: [User, Company, Job, ApplyHistory],
       synchronize: true,
+      dropSchema: true,
+      logging: true,
     };
   }
 }
