@@ -13,4 +13,11 @@ export class UsersRepository {
   async save(user) {
     return this.usersRepository.save(user);
   }
+
+  async findUserById(userId: string) {
+    return this.usersRepository
+      .createQueryBuilder()
+      .where('user.id = :userId', { userId })
+      .getOne();
+  }
 }

@@ -1,6 +1,11 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { CompaniesRepository } from '../companies/companies.repository';
 import { PostJobDto } from './dtos/request-dto/post-job.dto';
+import { UpdateJobDto } from './dtos/request-dto/update-job.dto';
 import { Job } from './entities/job.entity';
 import { JobsRepository } from './jobs.repository';
 
@@ -15,15 +20,7 @@ export class JobsService {
     const { companyId, position, reward, tech, description } = postJobDto;
     const company = await this.companiesRepository.findCompanyById(companyId);
 
-    if (!company) {
-      throw new HttpException(
-        {
-          status: HttpStatus.NOT_FOUND,
-          error: '존재하지 않는 회사입니다.',
-        },
-        HttpStatus.NOT_FOUND,
-      );
-    }
+    if (!company) throw new NotFoundException('존재하지 않는 회사입니다.');
 
     const job = new Job(position, reward, tech, description);
     job.setCompany(company);
@@ -31,5 +28,47 @@ export class JobsService {
     const createdJob = await this.jobsRepository.createJob(job);
 
     return createdJob.identifiers[0].id;
+  }
+
+  async deleteJob(jobId: string) {
+    const job = await this.jobsRepository.findJobById(jobId);
+
+    if (!job) throw new NotFoundException('존재하지 않는 채용공고입니다.');
+
+    try {
+      await this.jobsRepository.deleteJobById(jobId);
+    } catch (err) {
+      throw new InternalServerErrorException(
+        '서버 오류로 채용공고 삭제에 실패했습니다.',
+      );
+    }
+  }
+
+  async findJob(jobId: string) {
+    const job = await this.jobsRepository.findJobById(jobId);
+
+    if (!job) throw new NotFoundException('존재하지 않는 채용공고입니다.');
+
+    return job;
+  }
+
+  async updateJob(jobId: string, updateJobDto: UpdateJobDto) {
+    const job = await this.findJob(jobId);
+    const { position, reward, tech, description } = updateJobDto;
+
+    if (position) job.position = position;
+    if (reward) job.reward = reward;
+    if (tech) job.tech = tech;
+    if (description) job.description = description;
+
+    await this.jobsRepository.updateJobById(jobId, job);
+
+    return job;
+  }
+
+  async searchJobs(keyword: string) {
+    const jobs = await this.jobsRepository.searchJobs(keyword);
+
+    return jobs;
   }
 }

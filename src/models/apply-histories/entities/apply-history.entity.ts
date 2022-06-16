@@ -19,9 +19,21 @@ export class ApplyHistory {
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
   updatedAt: Date;
 
-  @ManyToOne(() => Job, (job) => job.applyHistories)
+  @ManyToOne(() => Job, (job) => job.applyHistories, {
+    nullable: false,
+  })
   job: Job;
 
-  @ManyToOne(() => User, (user) => user.applyHistories)
+  @ManyToOne(() => User, (user) => user.applyHistories, {
+    nullable: false,
+  })
   user: User;
+
+  setJob(job: Job) {
+    this.job = job;
+  }
+
+  setUser(user: User) {
+    this.user = user;
+  }
 }

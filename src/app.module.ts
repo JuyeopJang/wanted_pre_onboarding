@@ -6,6 +6,7 @@ import { MysqlDatabaseProviderModule } from './providers/database/mysql/provider
 import { APP_PIPE } from '@nestjs/core';
 import { JobsModule } from './models/jobs/jobs.module';
 import { SeederModule } from './database/seeders/seeder.module';
+import { ApplyHistoriesModule } from './models/apply-histories/apply-histories.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { SeederModule } from './database/seeders/seeder.module';
     MysqlDatabaseProviderModule,
     JobsModule,
     SeederModule,
+    ApplyHistoriesModule,
   ],
   controllers: [AppController],
   providers: [

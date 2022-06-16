@@ -1,3 +1,4 @@
+import { Exclude } from 'class-transformer';
 import { ApplyHistory } from 'src/models/apply-histories/entities/apply-history.entity';
 import { Company } from 'src/models/companies/entities/company.entity';
 import {
@@ -8,6 +9,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   OneToMany,
+  Index,
 } from 'typeorm';
 import { IJob } from '../interfaces/job.interface';
 
@@ -28,15 +30,18 @@ export class Job implements IJob {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Index({ fulltext: true })
   @Column()
   position: string;
 
   @Column()
   reward: number;
 
+  @Index({ fulltext: true })
   @Column()
   tech: string;
 
+  @Index({ fulltext: true })
   @Column()
   description: string;
 
