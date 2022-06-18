@@ -7,7 +7,6 @@ export const mockUser = () => {
   user.email = faker.internet.email();
   user.name = faker.internet.userName();
   user.password = faker.internet.password();
-  user.nickname = faker.datatype.uuid();
-
+  user.nickname = faker.name.firstName();
   return user;
 };

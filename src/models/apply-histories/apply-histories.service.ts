@@ -1,4 +1,5 @@
 import {
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -28,13 +29,27 @@ export class ApplyHistoriesService {
 
     if (!user) throw new NotFoundException('존재하지 않는 사용자입니다.');
 
+    const prevHistory =
+      await this.applyHistoriesRepository.findApplyHistoryByJobIdAndUserId(
+        jobId,
+        userId,
+      );
+
+    if (prevHistory) {
+      throw new ForbiddenException('이미 지원한 채용공고입니다.');
+    }
+
     const applyHistory = new ApplyHistory();
 
     applyHistory.setJob(job);
     applyHistory.setUser(user);
 
     try {
-      await this.applyHistoriesRepository.createHistory(applyHistory);
+      const createdHistory = await this.applyHistoriesRepository.createHistory(
+        applyHistory,
+      );
+
+      return { historyId: createdHistory.identifiers[0].id };
     } catch (err) {
       throw new InternalServerErrorException(
         '서버 문제로 채용공고 지원에 실패했습니다.',

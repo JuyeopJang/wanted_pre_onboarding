@@ -14,13 +14,19 @@ export class User implements IUser {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({
+    length: 50,
+  })
   name: string;
 
-  @Column()
+  @Column({
+    length: 20,
+  })
   nickname: string;
 
-  @Column()
+  @Column({
+    unique: true,
+  })
   email: string;
 
   @Column()

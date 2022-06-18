@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CompaniesRepository } from '../companies/companies.repository';
+import { JobListDto } from './dtos/request-dto/job-list.dto';
 import { PostJobDto } from './dtos/request-dto/post-job.dto';
 import { UpdateJobDto } from './dtos/request-dto/update-job.dto';
 import { Job } from './entities/job.entity';
@@ -17,17 +18,18 @@ export class JobsService {
   ) {}
 
   async postJob(postJobDto: PostJobDto) {
-    const { companyId, position, reward, tech, description } = postJobDto;
+    const { companyId, title, position, reward, tech, description } =
+      postJobDto;
     const company = await this.companiesRepository.findCompanyById(companyId);
 
     if (!company) throw new NotFoundException('존재하지 않는 회사입니다.');
 
-    const job = new Job(position, reward, tech, description);
+    const job = new Job(title, position, reward, tech, description);
     job.setCompany(company);
 
     const createdJob = await this.jobsRepository.createJob(job);
 
-    return createdJob.identifiers[0].id;
+    return { jobId: createdJob.identifiers[0].id };
   }
 
   async deleteJob(jobId: string) {
@@ -54,8 +56,9 @@ export class JobsService {
 
   async updateJob(jobId: string, updateJobDto: UpdateJobDto) {
     const job = await this.findJob(jobId);
-    const { position, reward, tech, description } = updateJobDto;
+    const { title, position, reward, tech, description } = updateJobDto;
 
+    if (title) job.title = title;
     if (position) job.position = position;
     if (reward) job.reward = reward;
     if (tech) job.tech = tech;
@@ -63,12 +66,24 @@ export class JobsService {
 
     await this.jobsRepository.updateJobById(jobId, job);
 
-    return job;
+    return {
+      updatedTitle: job.title,
+      updatedPosition: job.position,
+      updatedReward: job.reward,
+      updatedTech: job.tech,
+      updatedDescription: job.description,
+    };
   }
 
-  async searchJobs(keyword: string) {
-    const jobs = await this.jobsRepository.searchJobs(keyword);
+  async showJobs(query: JobListDto) {
+    const { limit, keyword, offset } = query;
+    const jobs = await this.jobsRepository.getJobsUsingQuery(
+      keyword,
+      limit,
+      offset,
+    );
 
+    if (!jobs.length) return null;
     return jobs;
   }
 }

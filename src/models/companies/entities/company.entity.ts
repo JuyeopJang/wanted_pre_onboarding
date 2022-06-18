@@ -14,13 +14,19 @@ export class Company implements ICompany {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({
+    length: 50,
+  })
   name: string;
 
-  @Column()
+  @Column({
+    length: 30,
+  })
   country: string;
 
-  @Column()
+  @Column({
+    length: 50,
+  })
   region: string;
 
   @CreateDateColumn({ name: 'created_at' })

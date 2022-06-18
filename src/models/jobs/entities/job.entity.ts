@@ -16,11 +16,13 @@ import { IJob } from '../interfaces/job.interface';
 @Entity({ name: 'job' })
 export class Job implements IJob {
   constructor(
+    title: string,
     position: string,
     reward: number,
     tech: string,
     description: string,
   ) {
+    this.title = title;
     this.position = position;
     this.reward = reward;
     this.tech = tech;
@@ -31,20 +33,33 @@ export class Job implements IJob {
   id: string;
 
   @Index({ fulltext: true })
-  @Column()
+  @Column({
+    length: 50,
+  })
+  title: string;
+
+  @Index({ fulltext: true })
+  @Column({
+    length: 30,
+  })
   position: string;
 
   @Column()
   reward: number;
 
   @Index({ fulltext: true })
-  @Column()
+  @Column({
+    length: 30,
+  })
   tech: string;
 
   @Index({ fulltext: true })
-  @Column()
+  @Column({
+    length: 5000,
+  })
   description: string;
 
+  @Index()
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 

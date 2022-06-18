@@ -22,8 +22,21 @@ export class JobsRepository {
 
   async findJobById(jobId: string) {
     return this.jobsRepository
-      .createQueryBuilder()
-      .where('job.id = :jobId', { jobId })
+      .createQueryBuilder('j')
+      .select([
+        'j.id',
+        'j.title',
+        'j.position',
+        'j.reward',
+        'j.tech',
+        'j.description',
+        'c.id',
+        'c.name',
+        'c.country',
+        'c.region',
+      ])
+      .innerJoin('j.company', 'c')
+      .where('j.id = :jobId', { jobId })
       .getOne();
   }
 
@@ -45,13 +58,27 @@ export class JobsRepository {
       .execute();
   }
 
-  async searchJobs(keyword: string) {
-    return this.jobsRepository
-      .createQueryBuilder()
-      .select()
-      .where(`MATCH(position) AGAINST ('${keyword}' IN BOOLEAN MODE)`)
-      .orWhere(`MATCH(tech) AGAINST ('${keyword}' IN BOOLEAN MODE)`)
-      .orWhere(`MATCH(description) AGAINST ('${keyword}' IN BOOLEAN MODE)`)
-      .getMany();
+  async getJobsUsingQuery(keyword: string, limit: number, offset: number) {
+    const query = this.jobsRepository
+      .createQueryBuilder('j')
+      .select([
+        'j.id',
+        'j.title',
+        'j.reward',
+        'c.name',
+        'c.region',
+        'c.country',
+      ])
+      .innerJoin('j.company', 'c');
+
+    if (keyword) {
+      query
+        .where(`MATCH(j.title) AGAINST ('${keyword}' IN BOOLEAN MODE)`)
+        .orWhere(`MATCH(j.position) AGAINST ('${keyword}' IN BOOLEAN MODE)`)
+        .orWhere(`MATCH(j.tech) AGAINST ('${keyword}' IN BOOLEAN MODE)`)
+        .orWhere(`MATCH(j.description) AGAINST ('${keyword}' IN BOOLEAN MODE)`);
+    }
+
+    return query.skip(offset).take(limit).getMany();
   }
 }

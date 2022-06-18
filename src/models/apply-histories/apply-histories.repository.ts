@@ -18,4 +18,12 @@ export class ApplyHistoriesRepository {
       .values(applyHistory)
       .execute();
   }
+
+  async findApplyHistoryByJobIdAndUserId(jobId: string, userId: string) {
+    return this.applyHistoriesRepository
+      .createQueryBuilder('apply_history')
+      .where('apply_history.jobId = :jobId', { jobId })
+      .andWhere('apply_history.userId = :userId', { userId })
+      .getOne();
+  }
 }

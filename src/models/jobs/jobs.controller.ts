@@ -9,10 +9,9 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { Response } from 'src/common/response/response-format';
+import { JobListDto } from './dtos/request-dto/job-list.dto';
 import { JobIdParam } from './dtos/request-dto/params.dto';
 import { PostJobDto } from './dtos/request-dto/post-job.dto';
-import { SearchQueryDto } from './dtos/request-dto/search-query.dto';
 import { UpdateJobDto } from './dtos/request-dto/update-job.dto';
 import { JobsService } from './jobs.service';
 
@@ -23,12 +22,10 @@ export class JobsController {
   // 채용공고 등록 API
   @HttpCode(201)
   @Post()
-  async postJob(@Body() postJobDto: PostJobDto): Promise<Response> {
+  async postJob(@Body() postJobDto: PostJobDto) {
     const jobId = await this.jobsService.postJob(postJobDto);
 
-    return new Response(201, '채용공고가 성공적으로 작성 되었습니다.', {
-      jobId,
-    });
+    return jobId;
   }
 
   // 채용공고 수정 API
@@ -40,11 +37,7 @@ export class JobsController {
     const { jobId } = params;
     const updatedJob = await this.jobsService.updateJob(jobId, updateJobDto);
 
-    return new Response(
-      200,
-      '채용공고가 성공적으로 수정 되었습니다.',
-      updatedJob,
-    );
+    return updatedJob;
   }
 
   // 채용공고 삭제 API
@@ -53,23 +46,15 @@ export class JobsController {
     const { jobId } = params;
 
     await this.jobsService.deleteJob(jobId);
-
-    return new Response(200, '채용공고가 성공적으로 삭제 되었습니다.', {});
+    return null;
   }
 
   // 채용공고 리스트 조회 API
   @Get()
-  async showJobs() {
-    return 'joblist!';
-  }
+  async showJobs(@Query() query: JobListDto) {
+    const jobs = await this.jobsService.showJobs(query);
 
-  // 채용공고 검색 조회 API
-  @Get('search')
-  async searchJobs(@Query() query: SearchQueryDto) {
-    const { keyword } = query;
-    const jobs = await this.jobsService.searchJobs(keyword);
-
-    return new Response(200, '채용공고가 성공적으로 검색 되었습니다.', jobs);
+    return jobs;
   }
 
   // 채용공고 상세 페이지 조회 API
@@ -78,6 +63,6 @@ export class JobsController {
     const { jobId } = params;
     const job = await this.jobsService.findJob(jobId);
 
-    return new Response(200, '채용공고가 성공적으로 조회 되었습니다.', job);
+    return job;
   }
 }
