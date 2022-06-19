@@ -1,6 +1,5 @@
-import { Exclude } from 'class-transformer';
-import { ApplyHistory } from 'src/models/apply-histories/entities/apply-history.entity';
-import { Company } from 'src/models/companies/entities/company.entity';
+import { ApplyHistory } from '../../apply-histories/entities/apply-history.entity';
+import { Company } from '../../companies/entities/company.entity';
 import {
   Entity,
   Column,

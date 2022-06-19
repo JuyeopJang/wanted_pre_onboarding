@@ -1,4 +1,4 @@
-import { ApplyHistory } from 'src/models/apply-histories/entities/apply-history.entity';
+import { ApplyHistory } from '../../apply-histories/entities/apply-history.entity';
 import {
   Entity,
   Column,

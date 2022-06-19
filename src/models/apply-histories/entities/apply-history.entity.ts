@@ -1,5 +1,5 @@
-import { Job } from 'src/models/jobs/entities/job.entity';
-import { User } from 'src/models/users/entities/user.entity';
+import { Job } from '../../jobs/entities/job.entity';
+import { User } from '../../users/entities/user.entity';
 import {
   Entity,
   CreateDateColumn,
