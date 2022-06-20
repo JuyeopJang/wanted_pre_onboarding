@@ -10,31 +10,31 @@ import {
 export class PostJobDto {
   @IsNotEmpty()
   @IsString()
-  companyId: string;
+  companyId!: string;
 
   @IsNotEmpty()
   @Length(5, 50)
   @IsString()
-  title: string;
+  title!: string;
 
   @IsNotEmpty()
   @Length(2, 30)
   @IsString()
-  position: string;
+  position!: string;
 
   @IsNotEmpty()
   @Min(0)
   @Max(100000000)
   @IsNumber()
-  reward: number;
+  reward!: number;
 
   @IsNotEmpty()
   @Length(2, 30)
   @IsString()
-  tech: string;
+  tech!: string;
 
   @IsNotEmpty()
   @Length(2, 5000)
   @IsString()
-  description: string;
+  description!: string;
 }
